@@ -2,8 +2,9 @@ import datetime
 
 from django.contrib import admin
 
-from main.models import AdvUser
-from main.utilities import send_activation_notification
+from .forms import SubRubricForm
+from .models import AdvUser, SubRubric, SuperRubric
+from .utilities import send_activation_notification
 
 
 def send_activation_notifications(modeladmin, request, queryset):
@@ -17,7 +18,7 @@ send_activation_notifications.short_description = 'Отправка писем �
                                                   'оповещениями об активации'
 
 
-class NonactivatedFilter(admin.SimpleListFilter):
+class NoneActivatedFilter(admin.SimpleListFilter):
     title = 'Прошли активацию?'
     parameter_name = 'actstate'
 
@@ -43,7 +44,7 @@ class NonactivatedFilter(admin.SimpleListFilter):
 class AdvUserAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'is_activated', 'date_joined')
     search_fields = ('username', 'email', 'first_name', 'last_name')
-    list_filter = (NonactivatedFilter,)
+    list_filter = (NoneActivatedFilter,)
     fields = (('username', 'email'), ('first_name', 'last_name'),
               ('send_messages', 'is_active', 'is_activated'),
               ('is_staff', 'is_superuser'), 'groups', 'user_permissions',
@@ -52,4 +53,19 @@ class AdvUserAdmin(admin.ModelAdmin):
     actions = (send_activation_notifications,)
 
 
+class SubRubricInLine(admin.TabularInline):
+    model = SubRubric
+
+
+class SuperRubricAdmin(admin.ModelAdmin):
+    exclude = ('super_rubric',)
+    inlines = (SubRubricInLine,)
+
+
+class SubRubricAdmin(admin.ModelAdmin):
+    form = SubRubricForm
+
+
 admin.site.register(AdvUser, AdvUserAdmin)
+admin.site.register(SuperRubric, SuperRubricAdmin)
+admin.site.register(SubRubric, SubRubricAdmin)

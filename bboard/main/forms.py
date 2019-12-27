@@ -3,7 +3,7 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 
 from . import models
-from .models import AdvUser, user_registrated
+from .models import AdvUser, user_registrated, SuperRubric, SubRubric
 
 
 class ChangeUserInfoForm(forms.ModelForm):
@@ -19,8 +19,8 @@ class RegisterUserForm(forms.ModelForm):
                              label='Адрес электронной почты')
 
     password1 = forms.CharField(label='Пароль',
-                               widget=forms.PasswordInput,
-                               help_text=password_validation.password_validators_help_text_html())
+                                widget=forms.PasswordInput,
+                                help_text=password_validation.password_validators_help_text_html())
     password2 = forms.CharField(label='Пароль (повторно)',
                                 widget=forms.PasswordInput,
                                 help_text='Введите тот же самй пароль еще раз для проверки')
@@ -39,8 +39,8 @@ class RegisterUserForm(forms.ModelForm):
 
         if password1 and password2 and password1 != password2:
             errors = {'password2': ValidationError(
-                     'Введенные пароли не совпадают',
-                     code='password_mismatch')}
+                'Введенные пароли не совпадают',
+                code='password_mismatch')}
             raise ValidationError(errors)
 
     def save(self, commit=True):
@@ -59,3 +59,13 @@ class RegisterUserForm(forms.ModelForm):
         model = AdvUser
         fields = ('username', 'email', 'password1', 'password2',
                   'first_name', 'last_name', 'send_messages')
+
+
+class SubRubricForm(forms.ModelForm):
+    super_rubric = forms.ModelChoiceField(
+        queryset=SuperRubric.objects.all(), empty_label=None,
+        label='Надрубрика', required=True)
+
+    class Meta:
+        model = SubRubric
+        fields = '__all__'

@@ -13,7 +13,6 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
-
 from .forms import RegisterUserForm
 from .models import AdvUser
 from . import forms
