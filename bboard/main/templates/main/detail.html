@@ -1,0 +1,54 @@
+{% extends 'layout/basic.html'%}
+{% load static %}
+{% load bootstrap4 %}
+{% block title %}{{ bb.title }}-{{ bb.rubric.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-3">
+    <div class="row">
+        {% if bb.image %}
+        <div class="col-md-auto">
+            <img class="main-image" src="{{ bb.image.url }}" width="300px" height="350px" >
+        </div>
+        {% endif %}
+        <div class="col">
+            <h2>{{ bb.title }}</h2>
+            <p>{{ bb.content }}</p>
+            <p class="font-weight-bold">{{ bb.price }}</p>
+            <p>{{ bb.contacts }}</p>
+            <p class="text-right font-italic">Объявление добавлено {{ bb.created_at }}</p>
+        </div>
+    </div>
+</div>
+{% if ais %}
+<div class="d-flex justify-content-between flex-wrap mt-5">
+    {% for ai in ais %}
+    <div>
+        <img class="additional-image" src="{{ ai.image.url }}" width="300px" height="350px">
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="container-fluid p-5" >
+<h2>Комментарии</h2>
+{% for com in comment %}
+
+        <ul class="list-unstyled border">
+            <li>
+                <p class="border">Автор: {{com.comment_author}}</p>
+                <p>Комментарий:{{com.content}}</p>
+                <p class="text-right font-italic">Комментарий:{{com.created_at}}</p>
+            </li>
+        </ul>
+
+{% endfor %}
+</div>
+<form method='POST'>
+    {% csrf_token %}
+    {% bootstrap_form form layout='horizontal' %}
+    {% buttons submit='Отправить' %}{% endbuttons %}
+</form>
+<p><a href="{% url 'main:by_rubric' pk=bb.rubric.pk%}{{ all }}">
+    Назад
+</a></p>
+{% endblock %}

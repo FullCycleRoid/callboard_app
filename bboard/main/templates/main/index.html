@@ -1,4 +1,29 @@
 {% extends "layout/basic.html" %}
+{% load thumbnail %}
+{% load static %}
 {% block content %}
     <h2>Последние 10 объявлений</h2>
+    {% for bb in bbs %}
+    <div class="container-fluid mb-2">
+
+            <ul class="list-unstyled">
+                <li class="media my-5 p-3 border">
+                {% url 'main:detail' rubric_pk=bb.rubric.pk pk=bb.pk as url%}
+                <a href='{{url}}{{all}}'>
+                {% if bb.image %}
+                <img class="mr-3" src="{% thumbnail bb.image 'default' %}">
+                {% else %}
+                <img class="mr-3" src="{% static 'main/empty.jpeg' %}">
+                {% endif %}
+                </a>
+                <div class="media-body">
+                    <p><a href="{{ url }}{{all}}">{{ bb.title }}</a></p>
+                    <p>{{ bb.content }}</p>
+                    <p class="text-right font-bold">{{ bb.price }}</p>
+                    <p class="text-right font-italic">{{ bb.created_at }}</p>
+                </div>
+                </li>
+                </ul>
+            </div>
+    {% endfor %}
 {% endblock %}

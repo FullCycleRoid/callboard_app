@@ -10,3 +10,12 @@ header h1 {
 .text-center{
     text-align:center;
 }
+
+main-image {
+
+    width:300px;
+}
+
+img.additional-image {
+    width:180px;
+}

@@ -7,7 +7,9 @@
     <h2>Удаление пользователя {{ object.username }}</h2>
     <form method="post">
         {% csrf_token %}
-        {% bootstrap_form form layout='horizontal'%}
+        {% for field in form %}
+            {% bootstrap_field field %}
+        {% endfor %}
         {% buttons submit='Удалить'%}{% endbuttons %}
     </form>
 {% endblock %}
